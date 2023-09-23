@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<th:block layout:fragment="head" th:include="/fragments/head"></th:block>
+<th:block layout:fragment="nav" th:include="/fragments/nav"></th:block>
+<body>
+<form id="writeForm" method="post" th:object="${boardDto}">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5">
+
+            <div class="pt-1">
+                <input type="text" th:field="*{title}" placeholder="제목을 입력하세요."
+                       style="border-radius: 5px; width: 100%; padding: 5px">
+            </div>
+            <div class="pt-1">
+                <textarea id="summernote" th:field="*{contents}" style="width: 100%"></textarea>
+            </div>
+            <div id="btnWrap" class="pt-1 d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-secondary" id="uploadBtn" type="button" style="width: 10%; padding: 5px;">업로드
+                </button>
+                <button class="btn btn-secondary" type="button" style="width: 10%; padding: 5px;">취소</button>
+            </div>
+
+        </div>
+    </section>
+    <!-- Vertically centered scrollable modal -->
+    <div class="modal fade" id="exampleModalCenteredScrollable" tabindex="-1"
+         aria-labelledby="exampleModalCenteredScrollableTitle" style="display: none;" aria-hidden="true"></div>
+    <div class="modal-backdrop fade show" style="display: none;"></div>
+</form>
+</body>
+<th:block layout:fragment="footer" th:include="/fragments/footer"></th:block>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                console.log(e.target.result);
+                $('#preview').attr("src", e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
+
+    $(function () {
+        var delay = 100;
+        var timer = null;
+
+        $('#uploadBtn').on('click', function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/regView",
+                dataType: "html",
+                success: function (data) {
+                    $('.modal').css('display', 'block').addClass("show");
+                    $('.modal-backdrop').css('display', 'block');
+                    $('.modal').html(data);
+                }
+            });
+        });
+
+        $('#summernote').summernote({
+            height: 500,
+            minHeight: null,
+            maxHeight: null,
+            focus: true,
+            lang: "ko-KR",
+            placeholder: "글을 입력해주세요."
+        });
+
+        $(window).on('resize', function () {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                if (matchMedia("screen and (min-width: 800px").matches) {
+                    $('#btnWrap').removeClass("mx-auto").addClass("justify-content-md-end").addClass("d-md-flex");
+                    $('#btnWrap .btn').css("width", "10%");
+                } else {
+                    $('#btnWrap').removeClass("d-md-flex").removeClass("justify-content-md-end").addClass("mx-auto");
+                    $('#btnWrap .btn').css("width", "");
+                }
+            }, delay);
+        });
+    });
+
+</script>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<th:block layout:fragment="head" th:include="/fragments/head"></th:block>
+<th:block layout:fragment="nav" th:include="/fragments/nav"></th:block>
+<body>
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row row-cols-5">
+            <div class="col" th:each="item : ${list}" style="margin-bottom: 5px;">
+                <div class="card" style="overflow: hidden">
+                    <img th:src="@{${'/thumbnail/' + item.thumbnail}}" class="card-img-top" style="height: 25vh; object-fit: cover;" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${item.title}"></h5>
+                        <p class="card-text" th:text="${item.division1 + ' - ' + item.division2}"></p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted" th:text="${item.regDt}"></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<th:block layout:fragment="footer" th:include="/fragments/footer"></th:block>
+<script>
+
+</script>
+</html>
